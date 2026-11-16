@@ -1,39 +1,42 @@
-# Maintaining the deals page
+# Maintaining deals and recommended gear
 
-The page is served from `/deals/` (GitHub Pages redirects `/deals` to it). It is deliberately absent from the header. The home page is unchanged.
+The page is served at `/deals/` (GitHub Pages redirects `/deals` to it). It is absent from the header. The home page is unchanged.
 
-Edit `deals.json` to maintain the list. Set `trackingId` to your Amazon.com Associates tracking ID. This is a public identifier, not an API secret. Never add account credentials here.
+Edit `deals.json` to maintain the list. `trackingId` contains the public Amazon.com Associates tracking ID, never account credentials.
 
-The initial list is empty until real offers are reviewed. Example configuration (replace every example value before publishing):
+Every entry needs `asin`, `name`, `category`, `description`, and an explicit `type` of `recommendation` or `deal`. Set `active` to `false`, or delete the entry, to remove it. `sourceUrl` is optional editorial reference data; displayed links use the ASIN and configured tracking ID.
+
+## Recommended gear
+
+Recommendations remain listed until manually removed. They do not require a discount or a `checkedOn` date. Cards say “Recommended” and make clear that the product is not necessarily discounted.
 
 ```json
 {
-  "trackingId": "YOUR-TRACKING-ID-20",
-  "deals": [
-    {
-      "asin": "B000000000",
-      "name": "Exact product and model name",
-      "category": "Storage",
-      "description": "An original explanation of who this product suits and why the offer is useful.",
-      "checkedOn": "2026-11-16",
-      "active": true
-    }
-  ]
+  "asin": "B07FN2FBML",
+  "type": "recommendation",
+  "name": "Midland MXT275 MicroMobile GMRS Radio",
+  "category": "Radios & communication",
+  "description": "An original explanation of who this product suits.",
+  "active": true
 }
 ```
 
-For each entry:
+Review recommendations periodically for relevance and working links. Being recommended does not imply hands-on testing or current availability.
 
-- Find the 10-character ASIN in its Amazon.com product URL after `/dp/`.
-- Verify that the exact product has a worthwhile, currently available offer before listing it. Check seller, variant, coupon requirements, and Prime restrictions. Include relevant conditions in the description without copying Amazon marketing text.
-- Use `YYYY-MM-DD` for `checkedOn`. Update this date only after actually reviewing the deal.
-- Optionally add `expiresOn` in the same format. The entry hides after that date ends in UTC; for offers ending earlier, remove or deactivate them at the actual end time.
-- Set `active` to `false`, or delete the entry, to remove a deal.
+## Deals
 
-Listings hide seven days after `checkedOn` at 00:00 UTC. This limits stale offers but does not verify prices or detect offers ending early. Review regularly and remove expired offers promptly. The browser clock controls these display checks.
+Only use `"type": "deal"` after verifying a worthwhile current offer on the exact product and variant. Check seller, coupon conditions, and Prime restrictions. Explain relevant conditions in original wording without copying Amazon marketing text.
 
-Cards use direct Amazon.com product URLs with your tracking tag. No exact prices, discount percentages, Amazon product images, or ratings are copied into the site. Adding those later requires checking Amazon's current content and pricing rules and using approved sources where required.
+Deals additionally require `checkedOn` in `YYYY-MM-DD` format. Update that date only after actually reviewing the offer. Deals hide seven days after that date at 00:00 UTC. Optional `expiresOn` uses the same format and hides the entry after that date ends in UTC. Remove offers manually if they end sooner.
 
-The page contains the Associates statement and a paid-link disclosure next to each product link. Ensure this website is listed in your Associates account before launch.
+When an offer ends, change its type to `recommendation` if it still deserves a place on the page, or deactivate it. Remove offer-specific claims from the description when changing its type.
 
-Publish updates through the repository's normal GitHub Pages deployment. No server or API credentials are needed.
+Date checks use the visitor's browser clock. They limit stale deals but do not monitor Amazon prices or detect offers ending early.
+
+## Affiliate content
+
+Cards use direct Amazon.com product URLs with your tracking tag, a nearby paid-link disclosure, and `rel="sponsored noopener"`. The page also contains the Associates statement. Ensure the website is listed in your Associates account before launch.
+
+No exact prices, discount percentages, Amazon product images, or ratings are copied into the site. Adding those later requires checking Amazon's current content and pricing rules and using approved sources where required.
+
+Publish changes through the normal GitHub Pages deployment. No server or API credentials are needed.
